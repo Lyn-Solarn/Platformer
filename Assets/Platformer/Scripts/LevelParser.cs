@@ -79,6 +79,24 @@ public class LevelParser : MonoBehaviour
                     Vector3 newPosition = new Vector3(columnIndex + 0.5f, row + 0.5f, 0);
                     Transform rockInstance = Instantiate(rockPrefab, levelRoot).transform;
                     rockInstance.position = newPosition;
+                } 
+                else if (currentChar == '?')
+                {
+                    Vector3 newPosition = new Vector3(columnIndex + 0.5f, row + 0.5f, 0);
+                    Transform questionBoxInstance = Instantiate(questionBoxPrefab, levelRoot).transform;
+                    questionBoxInstance.position = newPosition;
+                }
+                else if (currentChar == 'b')
+                {
+                    Vector3 newPosition = new Vector3(columnIndex + 0.5f, row + 0.5f, 0);
+                    Transform brickInstance = Instantiate(brickPrefab, levelRoot).transform;
+                    brickInstance.position = newPosition;
+                }
+                else if (currentChar == 's')
+                {
+                    Vector3 newPosition = new Vector3(columnIndex + 0.5f, row + 0.5f, 0);
+                    Transform stoneInstance = Instantiate(stonePrefab, levelRoot).transform;
+                    stoneInstance.position = newPosition;
                 }
             }
             row++;
