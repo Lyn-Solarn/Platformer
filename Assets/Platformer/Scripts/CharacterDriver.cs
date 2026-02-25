@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,18 +8,23 @@ public class CharacterControllerDriver : MonoBehaviour
     [Header("Ground Config")] public float walkSpeed;
     public float runSpeed;
     public float groundAcceleration = 1f;
+    
     [Header("Air Config")] public float airAcceleration = 0.5f;
     public float apexHeight;
     public float apexTime;
+    
     CharacterController _controller;
+    Animator _animator;
     float _xVelocity;
     float _yVelocity;
+    
     Quaternion _facingRight;
     Quaternion _facingLeft;
 
     void Awake()
     {
         _controller = GetComponent<CharacterController>();
+        _animator = GetComponent<Animator>();
         _facingRight = Quaternion.Euler(0f, 90f, 0f);
         _facingLeft = Quaternion.Euler(0f, -90f, 0f);
     }
@@ -72,5 +78,8 @@ public class CharacterControllerDriver : MonoBehaviour
             _yVelocity = 0f;
         if ((collisionFlags & CollisionFlags.Sides) != 0)
             _xVelocity = 0f;
+        
+        _animator.SetFloat("Speed", Math.Abs(_xVelocity));
+        _animator.SetBool("Grounded", _controller.isGrounded);
     }
 }
