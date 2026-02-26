@@ -39,6 +39,8 @@ public class LevelParser : MonoBehaviour
     public GameObject brickPrefab;
     public GameObject questionBoxPrefab;
     public GameObject stonePrefab;
+    public GameObject goombaPrefab;
+    public GameObject goalPrefab;
 
     void Start()
     {
@@ -97,6 +99,18 @@ public class LevelParser : MonoBehaviour
                     Vector3 newPosition = new Vector3(columnIndex + 0.5f, row + 0.5f, 0);
                     Transform stoneInstance = Instantiate(stonePrefab, levelRoot).transform;
                     stoneInstance.position = newPosition;
+                }
+                else if (currentChar == 'e')
+                {
+                    Vector3 newPosition = new Vector3(columnIndex + 0.5f, row + 0.5f, 0);
+                    Transform goombaInstance = Instantiate(goombaPrefab, levelRoot).transform;
+                    goombaInstance.position = newPosition;
+                }
+                else if (currentChar == 'g')
+                {
+                    Vector3 newPosition = new Vector3(columnIndex + 0.5f, row + 0.5f, 0);
+                    Transform goalInstance = Instantiate(goalPrefab, levelRoot).transform;
+                    goalInstance.position = newPosition;
                 }
             }
             row++;

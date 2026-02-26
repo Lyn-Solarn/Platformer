@@ -20,7 +20,7 @@ public class Raycasting : MonoBehaviour
 
                 if (hit.collider.CompareTag("Question"))
                 {
-                    coinsController.addPoints();
+                    coinsController.addCoins();
                 }
             }
         }

@@ -9,7 +9,9 @@ public class CharacterControllerDriver : MonoBehaviour
     public float runSpeed;
     public float groundAcceleration = 1f;
     
-    [Header("Air Config")] public float airAcceleration = 0.5f;
+    [Header("Air Config")] 
+    public float airAcceleration = 0.5f;
+    public float airMaxSpeed = 6f;
     public float apexHeight;
     public float apexTime;
     
@@ -20,6 +22,9 @@ public class CharacterControllerDriver : MonoBehaviour
     
     Quaternion _facingRight;
     Quaternion _facingLeft;
+    
+    public CoinsController coinsController;
+    public PointsController pointsController;
 
     void Awake()
     {
@@ -67,19 +72,57 @@ public class CharacterControllerDriver : MonoBehaviour
         }
 
 // Speed Clamping
-        float xMaxSpeed = runHeld ? runSpeed : walkSpeed;
+        float xMaxSpeed;
+
+        if (_controller.isGrounded)
+        {
+            xMaxSpeed = runHeld ? runSpeed : walkSpeed;
+        }
+        else
+        {
+            xMaxSpeed = airMaxSpeed;
+        }
+
         _xVelocity = Mathf.Clamp(_xVelocity, -xMaxSpeed, xMaxSpeed);
 // Apply velocity to change position
         Vector3 deltaPosition = new Vector3(_xVelocity, _yVelocity, 0f) *
                                 Time.deltaTime;
         CollisionFlags collisionFlags = _controller.Move(deltaPosition);
 // Reset velocities based on collisions
-        if ((collisionFlags & CollisionFlags.Above) != 0 && _yVelocity > 0f)
-            _yVelocity = 0f;
-        if ((collisionFlags & CollisionFlags.Sides) != 0)
+        // if ((collisionFlags & CollisionFlags.Above) != 0 && _yVelocity > 0f)
+        //     _yVelocity = 0f;
+        if (_controller.isGrounded && (collisionFlags & CollisionFlags.Sides) != 0)
             _xVelocity = 0f;
         
         _animator.SetFloat("Speed", Math.Abs(_xVelocity));
         _animator.SetBool("Grounded", _controller.isGrounded);
+    }
+    
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (_yVelocity <= 0f) return;
+        
+        if (hit.normal.y < -0.5f)
+        {
+            if (hit.collider.CompareTag("Brick"))
+            {
+                Destroy(hit.collider.gameObject);
+                pointsController.addPoints(100);
+            }
+            else if (hit.collider.CompareTag("Question"))
+            {
+                if (coinsController != null)
+                {
+                    coinsController.addCoins();
+                    pointsController.addPoints(100);
+                }
+                else
+                {
+                    Debug.LogWarning("CoinsController not assigned!");
+                }
+            }
+            
+            _yVelocity = 0f;
+        }
     }
 }

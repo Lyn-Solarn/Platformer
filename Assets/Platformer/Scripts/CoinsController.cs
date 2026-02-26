@@ -19,7 +19,7 @@ public class CoinsController : MonoBehaviour
         }
     }
 
-    public void addPoints()
+    public void addCoins()
     {
         coins++;
     }
